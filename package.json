@@ -13,7 +13,8 @@
     "test:core": "node --import tsx --test --test-isolation=none tests/core.test.ts",
     "test:rules": "firebase --project demo-class-message-board emulators:exec --only database \"node --import tsx --test --test-isolation=none tests/database.rules.test.ts\"",
     "test": "npm run test:core && npm run test:rules && npm run build",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "build:github-pages": "node scripts/build-github-pages.mjs"
   },
   "dependencies": {
     "firebase": "^12.1.0",

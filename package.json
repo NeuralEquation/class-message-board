@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:firebase": "node scripts/build-firebase.mjs",
     "start": "vinext start",
     "test:core": "node --import tsx --test --test-isolation=none tests/core.test.ts",
     "test:rules": "firebase --project demo-class-message-board emulators:exec --only database \"node --import tsx --test --test-isolation=none tests/database.rules.test.ts\"",

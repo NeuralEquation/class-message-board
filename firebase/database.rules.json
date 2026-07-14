@@ -12,9 +12,9 @@
       "$roomId": {
         ".read": "$roomId.matches(/^[A-Za-z0-9-]{6,32}$/)",
         ".write": "auth != null && root.child('admins').child(auth.uid).val() === true",
-        ".validate": "newData.hasOnly(['roomId','displayName','message','enabled','updatedAt','global','assignments']) && newData.child('roomId').val() === $roomId && newData.child('roomId').isString() && newData.child('displayName').isString() && newData.child('displayName').val().length <= 80 && newData.child('message').isString() && newData.child('message').val().length <= 160 && newData.child('enabled').isBoolean() && newData.child('updatedAt').isNumber()",
+        ".validate": "newData.hasChildren(['roomId','displayName','message','enabled','updatedAt','global','assignments']) && newData.child('roomId').val() === $roomId && newData.child('roomId').isString() && newData.child('displayName').isString() && newData.child('displayName').val().length <= 80 && newData.child('message').isString() && newData.child('message').val().length <= 160 && newData.child('enabled').isBoolean() && newData.child('updatedAt').isNumber()",
         "global": {
-          ".validate": "newData.hasOnly(['background','textColor','orientation','safeWidth','safeHeight','lockEnabled']) && newData.hasChildren(['background','textColor','orientation','safeWidth','safeHeight','lockEnabled'])",
+          ".validate": "newData.hasChildren(['background','textColor','orientation','safeWidth','safeHeight','lockEnabled'])",
           "background": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
           "textColor": { ".validate": "newData.isString() && newData.val().matches(/^#[0-9A-Fa-f]{6}$/)" },
           "orientation": { ".validate": "newData.val() === 'free' || newData.val() === 'portrait' || newData.val() === 'landscape'" },
@@ -24,9 +24,8 @@
           "$other": { ".validate": false }
         },
         "assignments": {
-          ".validate": "newData.numChildren() <= 80",
           "$index": {
-            ".validate": "newData.hasOnly(['id','text','order','background','textColor','enabled']) && newData.hasChildren(['id','text','order','enabled'])",
+            ".validate": "$index.matches(/^(?:[0-9]|[1-7][0-9])$/) && newData.hasChildren(['id','text','order','enabled'])",
             "id": { ".validate": "newData.isString() && newData.val().length <= 64" },
             "text": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 4" },
             "order": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 80" },

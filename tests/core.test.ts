@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyPalette, createDefaultRoom, effectiveColors, normalizeAssignments, splitMessage, validateRoom } from "../lib/core";
+import { applyPalette, createDefaultRoom, effectiveColors, normalizeAssignments, normalizeRoomFromDatabase, roomContentSignature, splitMessage, validateRoom } from "../lib/core";
 
 test("メッセージを1〜2文字の担当へ分割する", () => {
   assert.deepEqual(splitMessage("ありがとう").map((item) => item.text), ["あり", "がと", "う"]);
@@ -24,6 +24,29 @@ test("配色パターンを繰り返す", () => {
   assert.equal(colored[0].background, colored[2].background);
   assert.equal(colored[1].background, colored[3].background);
   assert.notEqual(colored[0].background, colored[1].background);
+});
+
+test("全員同色は個別色を解除して全体色を使う", () => {
+  const room = createDefaultRoom();
+  const same = applyPalette(room.assignments, "same");
+  assert.equal(same.every((item) => item.background === null && item.textColor === null), true);
+});
+
+test("Realtime Databaseで省略されたnull色を復元する", () => {
+  const room = createDefaultRoom();
+  const stored = JSON.parse(JSON.stringify(room));
+  delete stored.assignments[0].textColor;
+  delete stored.assignments[1].background;
+  const normalized = normalizeRoomFromDatabase(stored, room.roomId);
+  assert.ok(normalized);
+  assert.equal(normalized.assignments[0].textColor, null);
+  assert.equal(normalized.assignments[1].background, null);
+  assert.equal(normalizeRoomFromDatabase(stored, "different-room"), null);
+});
+
+test("公開状態の比較ではupdatedAtだけの差を無視する", () => {
+  const room = createDefaultRoom();
+  assert.equal(roomContentSignature(room), roomContentSignature({ ...room, updatedAt: room.updatedAt + 1 }));
 });
 
 test("正しいバックアップのみ受け付ける", () => {

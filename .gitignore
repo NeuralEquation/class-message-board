@@ -40,5 +40,6 @@ database-debug.log
 next-env.d.ts
 /dist/
 /.wrangler/
+/.firebase/
 /outputs/
 /work/

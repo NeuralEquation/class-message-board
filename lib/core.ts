@@ -63,15 +63,37 @@ export function effectiveColors(room: RoomSettings, assignment: Assignment) {
   };
 }
 
+export function roomContentSignature(room: RoomSettings) {
+  return JSON.stringify({ ...room, updatedAt: undefined });
+}
+
+export function normalizeRoomFromDatabase(value: unknown, expectedRoomId: string): RoomSettings | null {
+  if (!value || typeof value !== "object") return null;
+  const candidate = value as Partial<RoomSettings>;
+  if (candidate.roomId !== expectedRoomId || !Array.isArray(candidate.assignments)) return null;
+
+  const normalized = {
+    ...candidate,
+    assignments: candidate.assignments.map((item) => ({
+      ...item,
+      // Realtime Database removes properties whose value is null. Restore the
+      // app's explicit null representation before validating and rendering.
+      background: typeof item?.background === "string" ? item.background : null,
+      textColor: typeof item?.textColor === "string" ? item.textColor : null,
+    })),
+  };
+
+  return validateRoom(normalized) ? normalized : null;
+}
+
 export function applyPalette(assignments: Assignment[], mode: "same" | "alternate" | "multi" | "standard") {
   return assignments.map((item, index) => ({
     ...item,
     background:
-      mode === "standard" ? "#FFFFFF" :
-      mode === "same" ? PALETTE[0] :
+      mode === "standard" || mode === "same" ? null :
       mode === "alternate" ? PALETTE[index % 2] :
       PALETTE[index % PALETTE.length],
-    textColor: mode === "standard" ? "#111827" : null,
+    textColor: null,
   }));
 }
 

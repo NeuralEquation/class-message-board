@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { assertFails, assertSucceeds, initializeTestEnvironment, RulesTestEnvironment } from "@firebase/rules-unit-testing";
 import { get, ref, set } from "firebase/database";
-import { createDefaultRoom, normalizeAssignments } from "../lib/core";
+import { createDefaultRoom, normalizeAssignments, normalizeRoomFromDatabase } from "../lib/core";
 
 const PROJECT_ID = "demo-class-message-board";
 const DATABASE_URL = `http://127.0.0.1:9000?ns=${PROJECT_ID}`;
@@ -65,5 +65,11 @@ test("個別色がnullでも、Firebaseで省略された状態で保存でき�
   payload.assignments[0].background = null;
   payload.assignments[0].textColor = null;
   await assertSucceeds(set(ref(adminDatabase, `rooms/${ROOM_ID}`), payload));
-  assert.equal(payload.assignments[0].background, null);
+  const stored = (await assertSucceeds(get(ref(adminDatabase, `rooms/${ROOM_ID}`)))).val();
+  assert.equal(Object.hasOwn(stored.assignments[0], "background"), false);
+  assert.equal(Object.hasOwn(stored.assignments[0], "textColor"), false);
+  const normalized = normalizeRoomFromDatabase(stored, ROOM_ID);
+  assert.ok(normalized);
+  assert.equal(normalized.assignments[0].background, null);
+  assert.equal(normalized.assignments[0].textColor, null);
 });

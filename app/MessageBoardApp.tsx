@@ -8,6 +8,8 @@ import {
   applyPalette,
   Assignment,
   createDefaultRoom,
+  DEFAULT_BACKGROUND,
+  DEFAULT_TEXT_COLOR,
   effectiveColors,
   formatNumber,
   normalizeAssignments,
@@ -159,7 +161,7 @@ export default function MessageBoardApp() {
     <main className="app-shell">
       <header className="topbar">
         <a className="brand" href={`/?room=${roomId}`} aria-label="クラスメッセージボード ホーム">
-          <span className="brand-mark">文</span>
+          <span className="brand-mark" aria-hidden="true"></span>
           <span><strong>クラスメッセージボード</strong><small>Class Message Board</small></span>
         </a>
         <nav className="role-switch" aria-label="画面切替">
@@ -441,7 +443,7 @@ function AdminView({ room, setRoom, saveRoom, roomId, user, connection, notice, 
               <label className="check-field"><input type="checkbox" checked={room.global.lockEnabled} onChange={(e) => setRoom({ ...room, global: { ...room.global, lockEnabled: e.target.checked } })} />撮影表示の簡易ロック</label>
             </div>
             {overrideCount > 0 && <p className="override-summary">{overrideCount}担当の個別色が全体色を上書きしています。「全員同色」で個別色をまとめて解除できます。</p>}
-            <div className="palette-actions"><span>配色パターン</span><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "same") })}>全員同色</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "alternate") })}>2色交互</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "multi") })}>5色繰り返し</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "standard"), global: { ...room.global, background: "#FFFFFF", textColor: "#111827" } })}>緊急：白＋黒</button></div>
+            <div className="palette-actions"><span>配色パターン</span><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "same") })}>全員同色</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "alternate") })}>2色交互</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "multi") })}>5色繰り返し</button><button className="rainbow-preset" onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "rainbow") })}>虹色</button><button onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "standard"), global: { ...room.global, background: "#FFFFFF", textColor: "#111827" } })}>緊急：白＋黒</button><button className="reset-preset" onClick={() => setRoom({ ...room, assignments: applyPalette(room.assignments, "initial"), global: { ...room.global, background: DEFAULT_BACKGROUND, textColor: DEFAULT_TEXT_COLOR } })}>初期配色に戻す</button></div>
           </section>
         </div>
 

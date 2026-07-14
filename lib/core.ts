@@ -25,6 +25,17 @@ export type RoomSettings = {
 };
 
 export const PALETTE = ["#DDF3FA", "#FFF1B8", "#F9DCE5", "#DDF2D8", "#E7E1F7"];
+export const RAINBOW_PALETTE = [
+  { background: "#FF6B6B", textColor: "#FFFFFF" },
+  { background: "#FFB347", textColor: "#111827" },
+  { background: "#FFE66D", textColor: "#111827" },
+  { background: "#8BD17C", textColor: "#111827" },
+  { background: "#4ECDC4", textColor: "#111827" },
+  { background: "#6C8CD5", textColor: "#FFFFFF" },
+  { background: "#B388EB", textColor: "#111827" },
+];
+export const DEFAULT_BACKGROUND = "#DDF3FA";
+export const DEFAULT_TEXT_COLOR = "#111827";
 
 export function makeRoomId(): string {
   const alphabet = "abcdefghjkmnpqrstuvwxyz23456789";
@@ -86,15 +97,21 @@ export function normalizeRoomFromDatabase(value: unknown, expectedRoomId: string
   return validateRoom(normalized) ? normalized : null;
 }
 
-export function applyPalette(assignments: Assignment[], mode: "same" | "alternate" | "multi" | "standard") {
-  return assignments.map((item, index) => ({
-    ...item,
-    background:
-      mode === "standard" || mode === "same" ? null :
-      mode === "alternate" ? PALETTE[index % 2] :
-      PALETTE[index % PALETTE.length],
-    textColor: null,
-  }));
+export function applyPalette(assignments: Assignment[], mode: "same" | "alternate" | "multi" | "rainbow" | "initial" | "standard") {
+  return assignments.map((item, index) => {
+    if (mode === "rainbow") {
+      const color = RAINBOW_PALETTE[index % RAINBOW_PALETTE.length];
+      return { ...item, ...color };
+    }
+    return {
+      ...item,
+      background:
+        mode === "standard" || mode === "same" ? null :
+        mode === "initial" || mode === "alternate" ? PALETTE[index % 2] :
+        PALETTE[index % PALETTE.length],
+      textColor: null,
+    };
+  });
 }
 
 export function validateRoom(value: unknown): value is RoomSettings {
@@ -125,8 +142,8 @@ export function createDefaultRoom(roomId = "demo8k2m"): RoomSettings {
     enabled: true,
     updatedAt: Date.now(),
     global: {
-      background: "#DDF3FA",
-      textColor: "#111827",
+      background: DEFAULT_BACKGROUND,
+      textColor: DEFAULT_TEXT_COLOR,
       orientation: "free",
       safeWidth: 80,
       safeHeight: 75,

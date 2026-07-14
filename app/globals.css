@@ -26,7 +26,9 @@ textarea { resize: vertical; line-height: 1.65; }
 .app-shell { min-height: 100dvh; }
 .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 max(24px, calc((100vw - 1240px) / 2)); background: #fff; border-bottom: 1px solid var(--line); }
 .brand { display: flex; align-items: center; gap: .7rem; color: var(--ink); text-decoration: none; }
-.brand-mark { width: 40px; height: 40px; display: grid; place-items: center; background: var(--navy); color: #fff; border-radius: 7px; font-size: 1.25rem; font-weight: 900; }
+.brand-mark { position: relative; width: 42px; height: 42px; flex: 0 0 42px; border-radius: 12px; background: linear-gradient(145deg, #244a78, #173253); box-shadow: 0 5px 14px rgba(22, 49, 82, .2); }
+.brand-mark::before { content: ""; position: absolute; left: 8px; top: 7px; width: 23px; height: 28px; border-radius: 5px; background: linear-gradient(145deg, #f9dce5, #e7e1f7); transform: rotate(-9deg); opacity: .88; }
+.brand-mark::after { content: ""; position: absolute; right: 7px; bottom: 6px; width: 24px; height: 29px; border: 1px solid rgba(22, 32, 51, .12); border-radius: 5px; background: linear-gradient(90deg, #ef6c72 0 28%, transparent 28%) 6px 7px / 13px 3px no-repeat, linear-gradient(90deg, #f2b84b 0 55%, transparent 55%) 6px 13px / 13px 3px no-repeat, linear-gradient(90deg, #4b9a78 0 82%, transparent 82%) 6px 19px / 13px 3px no-repeat, #fff; box-shadow: 0 3px 7px rgba(14, 26, 42, .2); }
 .brand strong, .brand small { display: block; }
 .brand strong { font-size: 1rem; letter-spacing: .03em; }
 .brand small { color: var(--muted); font-size: .68rem; margin-top: .08rem; letter-spacing: .06em; }
@@ -134,6 +136,8 @@ button.danger { background: var(--danger); border-color: var(--danger); color: #
 .palette-actions { align-items: center; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
 .palette-actions span { width: 100%; color: var(--muted); font-size: .78rem; font-weight: 700; }
 .palette-actions button { min-height: 38px; padding: .45rem .7rem; font-size: .75rem; }
+.palette-actions .rainbow-preset { border-color: #9a7bc8; background: linear-gradient(90deg, #ffe0e0, #fff1c2, #dff4d8, #dcecff, #ece0ff); color: #27344a; }
+.palette-actions .reset-preset { margin-left: auto; border-style: dashed; color: #465469; }
 .override-summary { margin: 16px 0 0; padding: 10px 12px; border-left: 3px solid #b88319; background: #fff8dc; color: #675826; font-size: .78rem; line-height: 1.55; }
 .sticky-panel { position: sticky; top: 18px; }
 .preview-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; max-height: 260px; overflow: auto; }

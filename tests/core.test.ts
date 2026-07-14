@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyPalette, createDefaultRoom, effectiveColors, normalizeAssignments, normalizeRoomFromDatabase, roomContentSignature, splitMessage, validateRoom } from "../lib/core";
+import { applyPalette, createDefaultRoom, DEFAULT_BACKGROUND, DEFAULT_TEXT_COLOR, effectiveColors, normalizeAssignments, normalizeRoomFromDatabase, RAINBOW_PALETTE, roomContentSignature, splitMessage, validateRoom } from "../lib/core";
 
 test("メッセージを1〜2文字の担当へ分割する", () => {
   assert.deepEqual(splitMessage("ありがとう").map((item) => item.text), ["あり", "がと", "う"]);
@@ -30,6 +30,24 @@ test("全員同色は個別色を解除して全体色を使う", () => {
   const room = createDefaultRoom();
   const same = applyPalette(room.assignments, "same");
   assert.equal(same.every((item) => item.background === null && item.textColor === null), true);
+});
+
+test("虹色プリセットを7色で繰り返す", () => {
+  const room = createDefaultRoom();
+  const rainbow = applyPalette([...room.assignments, ...room.assignments], "rainbow");
+  assert.deepEqual(rainbow[0].background, RAINBOW_PALETTE[0].background);
+  assert.deepEqual(rainbow[7].background, RAINBOW_PALETTE[0].background);
+  assert.equal(rainbow.every((item) => item.background && item.textColor), true);
+});
+
+test("初期配色へ戻す", () => {
+  const room = createDefaultRoom();
+  const restored = applyPalette(applyPalette(room.assignments, "rainbow"), "initial");
+  assert.equal(restored[0].background, DEFAULT_BACKGROUND);
+  assert.equal(restored[1].background, "#FFF1B8");
+  assert.equal(restored.every((item) => item.textColor === null), true);
+  assert.equal(room.global.background, DEFAULT_BACKGROUND);
+  assert.equal(room.global.textColor, DEFAULT_TEXT_COLOR);
 });
 
 test("Realtime Databaseで省略されたnull色を復元する", () => {

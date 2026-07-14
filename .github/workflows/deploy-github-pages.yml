@@ -45,6 +45,12 @@ jobs:
           printf 'NEXT_PUBLIC_FIREBASE_PROJECT_ID=%s\n' "$FIREBASE_PROJECT_ID" >> .env.local
           printf 'NEXT_PUBLIC_FIREBASE_APP_ID=%s\n' "$FIREBASE_APP_ID" >> .env.local
 
+      - name: Verify Cloudflare Workers build
+        run: npm run build
+
+      - name: Verify Firebase Hosting build
+        run: npm run build:firebase
+
       - name: Build and validate GitHub Pages output
         run: npm run build:github-pages
 

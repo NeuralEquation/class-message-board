@@ -21,6 +21,7 @@ import {
 } from "@/lib/core";
 import { firebaseConfigured, firebaseServices } from "@/lib/firebase";
 
+const APP_BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const CACHE_PREFIX = "classMessageBoard.room.";
 const PICK_PREFIX = "classMessageBoard.pick.";
 
@@ -160,7 +161,7 @@ export default function MessageBoardApp() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <a className="brand" href={`/?room=${roomId}`} aria-label="クラスメッセージボード ホーム">
+        <a className="brand" href={`${APP_BASE_PATH}/?room=${roomId}`} aria-label="クラスメッセージボード ホーム">
           <span className="brand-mark" aria-hidden="true"></span>
           <span><strong>クラスメッセージボード</strong><small>Class Message Board</small></span>
         </a>
